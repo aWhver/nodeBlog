@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reset.css">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/index.js"></script>
+</head>
+<body>
+<% include header.ejs %>
+<div class="nav">
+    <ul class="nav_list clearF">
+        <li><a  class="nav_list_a" href="/">首页</a></li>
+        <li><a  class="nav_list_a on" href="/article/list-1.html">文章</a></li>
+        <li class=" hasList">
+            <a  class="nav_list_a" href="#">笔记</a>
+            <ul class="dropDown">
+                <li><a href="">css+div</a></li>
+                <li><a href="">Javascript</a></li>
+                <li><a href="">css3+H5</a></li>
+            </ul>
+        </li>
+        <li><a  class="nav_list_a" href="#">案例</a></li>
+        <li><a  class="nav_list_a" href="#">联系</a></li>
+    </ul>
+</div>
+<div class="article_page">
+    <div class="AP_left">
+        <div class="article">
+            <ul>
+                <% for(var i in showdata){ %>
+                <li class="article_list clearF">
+                    <p class="title"><%= showdata[i].title %></p>
+                    <div class="article_con clearF">
+                        <figure>
+                            <img src=<%= showdata[i].image %> alt="">
+                        </figure>
+                        <div class="des">
+                            <p>
+                                <%= showdata[i].content %>
+                            </p>
+                            <a href="/article/articleCheck/<%= showdata[i].id %>.html" class="readAll">阅读全文 》 </a>
+                        </div>
+                    </div>
+                    <p class="article_about">
+                        <span>2017 03 27</span>
+                        <span>发表于：<a href=""><%= showdata[i].tag %></a><a href="/article/articleCheck/<%= showdata[i].id %>.html">评论</a></span>
+                    </p>
+                </li>
+                <% } %>
+            </ul>
+             <ul class="page">
+                 <li class="direc prev"><a href="javascript:;">《prev</a></li>
+                <% for(var i=0;i<allData.length/2;i++){ %>
+                     <% if(locals.page == i+1){ %>
+                        <li class="num_page active"><a href='/article/list-<%= locals.page %>.html'>第<%= i+1 %>页</a></li>
+                     <% }else{ %>
+                     <li class="num_page"><a href='/article/list-<%= i+1 %>.html'>第<%= i+1 %>页</a></li>
+                 <% } %>
+                <% } %>
+                 <li class="direc next"><a href="javascript:;">next》</a></li>
+             </ul>
+        </div>
+    </div>
+    <div class="AP_right">
+        <div class="cateType">
+        <div id="box">
+            <div class="caltitle">
+                <div class="left btn"> &lt; </div>
+                <h2><span id='month'></span><span id='year'></span></h2>
+                <div class="right btn"> &gt; </div>
+            </div>
+            <div class="date">
+                <p>
+                    <span>S</span>
+                    <span>M</span>
+                    <span>T</span>
+                    <span>W</span>
+                    <span>T</span>
+                    <span>F</span>
+                    <span>S</span>
+                </p>
+                <ul>
+
+                </ul>
+            </div>
+        </div>
+        <h4>最新文章</h4>
+        <ul>
+            <% for(var i=allData.length-1;i>allData.length-8;i--){ %>
+            <li class="cate_list">
+                <i class="icon"></i>
+                <a href="/article/articleCheck/<%= allData[i].id %>.html"><%= allData[i].title %></a>
+                <% } %>
+        </ul>
+    </div>
+    </div>
+</div>
+<script>
+    (function(){
+        var length = $('.article_page .AP_left ul.page li.num_page').length;
+        var $prev = $('.article_page .AP_left ul.page li.prev');
+        var $next = $('.article_page .AP_left ul.page li.next');
+        var reg = /-\d+/;
+        var index,href ;
+        $prev.click(function(){
+            changeUrl(function(){
+                index --;
+                index = Math.max(1,index);
+            })
+        });
+        $next.click(function(){
+            changeUrl(function(){
+                index++;
+                index = Math.min(index,length)
+            })
+        });
+        function changeUrl(fn){
+            href = window.location.href;
+            index = href.match(reg)[0].substr(1,2);
+            fn && fn();
+            window.location.href = href.replace(/-\d+/,'-'+index)
+        }
+    })()
+
+</script>
+</body>
+</html>

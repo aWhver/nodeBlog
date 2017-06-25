@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en" onselectstart="return false">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+	 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+  <title>桌面系统拖拽</title>
+  <style type="text/css">
+	*{margin:0;padding:0;}
+	body{background:#000;height:100%;overflow:hidden;}
+	ul{height:100%;}
+	ul li{list-style:none;width:50px;height:70px;background-size:50px 50px;background-origin:content-box;padding:6px;border-radius:3px;position:absolute;background-repeat:no-repeat;}
+	span{color:#fff;position:absolute;bottom:0;}
+	#select{
+		border:1px dotted #ddd;
+		position:absolute;
+		z-index:999;
+	}
+	ul li.se{background-color:rgba(255,255,255,.3);}
+	a{
+		position: fixed;
+		padding: 4px 6px;
+		margin: 0 5px;
+		font-size: 14px;
+		font-weight: bold;
+		color: #fff;
+		background: rgba(0,0,0,.5);
+		border: 1px solid #fff;
+		border-radius: 5px;
+		cursor: pointer;
+		bottom: 25px;
+		left: 25px;
+		z-index:9999;
+	}
+  </style>
+ </head>
+ <body>
+	<ul>
+		<li>
+			<span>01图标</span>
+		</li>
+		<li>
+			<span>02图标</span>
+		</li>
+		<li>
+			<span>03图标</span>
+		</li>
+		<li>
+			<span>04图标</span>
+		</li>
+		<li>
+			<span>05图标</span>
+		</li>
+		<li>
+			<span>06图标</span>
+		</li>
+		<li>
+			<span>07图标</span>
+		</li>
+		<li>
+			<span>08图标</span>
+		</li>
+		<li>
+			<span>09图标</span>
+		</li>
+		<li>
+			<span>10图标</span>
+		</li>
+		<li>
+			<span>11图标</span>
+		</li>
+	</ul>
+	<a href="/">back</a>
+	<script type="text/javascript">
+		$(function(){
+			var $li= $("ul li");
+			var num = 6;
+			var $lih = $li.outerHeight();
+			var $liw = $li.outerWidth();
+			var $winh,h_;
+			//alert($winh);
+			//初始化布局
+			(function(){
+				init();
+				$(window).resize(function(){
+					$winh = $(window).height();
+					h_ = ($winh-num*$lih)/num;
+					h_ = Math.max(0,h_);
+					$li.each(function(i){
+						$(this).css({
+							backgroundImage : "url(img/pic"+(i+1)+".png)",
+							top: this.y*(h_+$lih) + h_/2 + "px",
+							left:  this.x*(40 + $liw) + $liw/2 + "px"
+						});
+					});
+				});
+				function init(){
+					$winh = $(window).height();
+					h_ = ($winh-num*$lih)/num;
+					h_ = Math.max(0,h_);
+					//alert($winh);
+					$li.each(function(i){
+						this.x=parseInt(i/num);
+						this.y=i%num;
+						$(this).css({
+							backgroundImage : "url(img/pic"+(i+1)+".png)",
+							top: this.y*(h_+$lih) + h_/2 + "px",
+							left:  this.x*(40 + $liw) + $liw/2 + "px"
+						});
+					});
+					$li.hover(function(){
+						$(this).css( "backgroundColor" , "rgba(255,255,255,.3)" );
+					},function(){
+						$(this).css( "backgroundColor" , "" );
+					});
+				};
+			})();
+			//拖拽排序
+			(function(){	
+				$li.mousedown(function(e){
+					var This = this;
+					var xS = e.pageX;
+					var yS = e.pageY;
+					var x_ =0,y_=0;
+					var tops=[],lefts=[];
+					var $se;
+					var $hasse = $(this).hasClass("se");
+					if ( !$hasse )
+					{
+						$se = $(this);
+						tops[0] = this.y*(h_+$lih) + h_/2;
+						lefts[0] = this.x*(40 + $liw) + $liw/2;
+						$li.removeClass("se");
+					}else{
+						$se = $("ul li.se");
+						tops=[];lefts=[];
+						$se.each(function(i){
+							tops[i]=this.y*(h_+$lih) + h_/2;
+							lefts[i]=this.x*(40 + $liw) + $liw/2;
+						});
+					};
+				
+					//console.log(tops[i]);
+					$(document).mousemove(function(e){
+						var xN = e.pageX;
+						var yN = e.pageY;
+						x_= xN-xS;
+						y_= yN-yS;
+						
+						$se.each(function(i){
+							$(this).css({
+								top : tops[i] + y_ + "px",
+								left : lefts[i] + x_ + "px" 
+							});
+						});
+						
+					});
+					$(document).mouseup(function(e){
+						$(this).off("mousemove");
+						
+							var x=[],y=[];
+							$se.each(function(i){
+								x[i]= Math.round(($(this).offset().left-$liw/2)/(40 + $liw));
+								y[i]= Math.round(($(this).offset().top-h_/2)/(h_+$lih));
+							});
+						
+						var loop = false;
+						$se.each(function(j){
+							var index = $(this).index();
+							var $obj = $li.not(".se");
+							for (var i=0;i<$obj.length ;i++ )
+							{		
+								if ( $obj[i].x== x[j] && $obj[i].y== y[j] )
+								{
+									loop = true;
+								};
+							};
+						});
+						
+						if ( !loop )
+						{
+							$se.each(function(i){
+								this.x=x[i];
+								this.y=y[i];
+							});
+						};
+						
+						$se.each(function(i){
+							$(this).css({
+								top : this.y*(h_+$lih) + h_/2,
+								left : this.x*(40 + $liw) + $liw/2
+							});
+						});
+						$(this).off("mouseup");
+					});
+					return false;
+				});
+			})();
+			//选中
+			(function(){
+				$(document).mousedown(function(e){
+					var xS = e.pageX;
+					var yS = e.pageY;
+					var $div = $("<div id='select'></div>");
+					$("body").append($div);
+					$li.removeClass("se");
+					$div.css({
+						left : xS + "px",
+						top : yS + "px"
+					});
+					$(this).mousemove(function(e){
+						var xN = e.pageX;
+						var yN = e.pageY;
+						var Width = xN - xS;
+						var Height = yN - yS;
+						if ( Width<0 )$div.css("left",xS+Width+"px");
+						if ( Height<0)$div.css("top",yS+Height+"px");
+						$div.width(Math.abs(Width));
+						$div.height(Math.abs(Height));
+						$li.each(function(i){
+							if ( crash( $(this) , $div ) )
+							{
+								$(this).addClass("se");
+							}else{
+								$(this).removeClass("se");
+							};
+						});
+					});
+					$(this).mouseup(function(){
+						$(this).off("mousemove");
+						$(this).off("mouseup");
+						$div.remove();
+					});
+				});
+				//碰撞检测
+				function crash( $1,$2 ){
+					var t1 = $1.offset().top,
+						b1 = t1 + $1.outerHeight(),
+						l1 = $1.offset().left,
+						r1 = l1 + $1.outerWidth();
+
+					var t2 = $2.offset().top,
+						b2 = t2 + $2.outerHeight(),
+						l2 = $2.offset().left,
+						r2 = l2 + $2.outerWidth();
+					return(t1>b2||b1<t2||l1>r2||r1<l2)?0:1;
+				};
+			})();
+		});
+		
+		
+	</script>
+ </body>
+</html>

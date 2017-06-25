@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>星空流星</title>
+  <style type="text/css">
+	*{margin:0;padding:0;}
+	#can{background:#050d1a;display:block;}
+    a{
+        position: fixed;
+        padding: 4px 6px;
+        margin: 0 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        background: rgba(0,0,0,.5);
+        border: 1px solid #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        bottom: 25px;
+        left: 25px;
+    }
+  </style>
+ </head>
+ <body>
+	<canvas id="can"></canvas>
+    <a href="/">back</a>
+	<script type="text/javascript">
+		var can = document.getElementById('can');
+		var cxt = can.getContext('2d');
+		
+		var w = can.width = window.innerWidth;
+		var h = can.height = window.innerHeight;
+		var num = 300;
+		var arr = [];//存取num个点坐标
+		var a,rad,r;
+		var k =-1;//流星的方向
+		var liuArr = [];//存取流星改变的坐标
+		for (var i=0;i<num ;i++ )
+		{
+			arr[i]={x: Math.random()*w,y:Math.random()*h,r:Math.random()*6+1}
+			circle(arr[i].x,arr[i].y,arr[i].r);
+		}
+		
+		(function draw(){
+			cxt.clearRect(0,0,w,h);
+			for (var i=0;i<num ;i++ )
+			{
+				arr[i].r += Math.random()*2-1;
+				arr[i].r = Math.max(0,arr[i].r);
+				arr[i].r = Math.min(8,arr[i].r);
+				circle(arr[i].x,arr[i].y,arr[i].r);
+			}
+			if ( liuArr.length )
+			{
+				for (var i=0;i<liuArr.length ;i++ )
+				{
+					liuArr[i].cY += 7;
+					a = liuArr[i].X + liuArr[i].cY*k;
+					liuxing(a,liuArr[i].Y+liuArr[i].cY,k,liuArr[i].len);
+					if (  a < -(liuArr[i].len+2*r)*Math.cos(rad) || liuArr[i].Y+liuArr[i].cY > (h-(liuArr[i].len+2*r)*Math.sin(rad)))
+					{
+						//liuArr[i].cY = 0;
+						liuArr.splice(i,1);
+					}
+				}
+			}
+			if ( Math.random()>0.99 )
+			{
+				var sX = Math.random()*(w-400)+400;
+				liuArr.push({X:sX,Y:0,cY:0,len:Math.random()*300+100});
+			}
+			window.requestAnimationFrame(draw);
+		})();
+		//画点
+		function circle(x,y,r){
+			cxt.save();
+			var radial = cxt.createRadialGradient(x,y,0,x,y,r);
+				radial.addColorStop(0,'rgba(255,255,255,.8)');
+				radial.addColorStop(0.1,'rgba(255,255,255,.6)');
+				radial.addColorStop(0.2,'rgba(255,255,255,.1)');
+				radial.addColorStop(1,'rgba(255,255,255,0)');
+			cxt.fillStyle = radial;
+			cxt.beginPath();
+			cxt.arc(x,y,r,0,2*Math.PI,true);
+			cxt.closePath();
+			cxt.fill();
+			cxt.restore();
+		};
+		//画流星
+		function liuxing(x,y,k,length){
+			r = 3;
+			cxt.save();
+			cxt.fillStyle='#fff';
+			cxt.beginPath();
+			cxt.arc(x,y,r,0,2*Math.PI,false);
+			cxt.closePath();
+			cxt.fill();
+
+			rad = Math.atan(k);
+			var rad1 = Math.asin(length/(length+x));
+			var cRad = rad1-rad;
+			var x0 = x+(r+length)*Math.cos(rad);//尾巴x坐标
+			var y0 = y+(r+length)*Math.sin(rad);//尾巴y坐标
+			//console.log(x0+','+y0);
+			var x1 = r*Math.cos(cRad)+x;//圆的切点1x坐标
+			var y1 = r*Math.sin(cRad)+y;//圆的切点1y坐标
+			var x2 = -r*Math.cos(cRad)+x;//圆的切点2x坐标
+			var y2 = -r*Math.sin(cRad)+y;//圆的切点2y坐标
+			var lin = cxt.createLinearGradient(x,y,x0,y0);
+				lin.addColorStop(0,'rgba(255,255,255,0.3)');
+				lin.addColorStop(0.05,'rgba(255,255,255,0.2)');
+				lin.addColorStop(0.4,'rgba(255,255,255,0.1)');
+				lin.addColorStop(1,'rgba(255,255,255,0)');
+			cxt.fillStyle = lin;
+			cxt.beginPath();
+			cxt.moveTo(x0,y0);
+			cxt.lineTo(x1,y1);
+			cxt.lineTo(x2,y2);
+			cxt.closePath();
+			cxt.fill();
+			cxt.restore();
+		};
+	</script>
+ </body>
+</html>

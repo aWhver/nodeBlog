@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <form action="/article" method="post" enctype="multipart/form-data">
+        <div id="articleSend">
+            <table >
+                <tr>
+                    <td><label for="">文章标题: </label></td>
+                    <td>
+                        <div class="con"><input type="text" class="title" name="title"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="">标签: </label></td>
+                    <td>
+                        <div class="con"><input type="text" class="tag" name="tag"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="">作者: </label></td>
+                    <td>
+                        <div class="con"><input type="text" class="author" name="author"></div>
+                    </td>
+                </tr>
+            </table>
+            <label for="">内容: </label>
+
+            <div class="con"><textarea cols="76" rows="10" type="text" class="cont"  name="cont"></textarea></div>
+        </div>
+        <input type="file" name="free" multiple="multiple">
+        <input type="submit">
+    </form>
+        <script>
+            $('.submit').on('click',function(){
+                $.ajax({
+                    url:'/article',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        title:$('.title').val(),
+                        tag:$('.tag').val(),
+                        author:$('.author').val(),
+                        cont:$('.cont').val()
+                    },
+                    success(){
+                        alert('发布文章成功')
+                    },
+                    error(err){
+                        alert(err.responseText)
+                    }
+                })
+            })
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/jquery.js"></script>
+</head>
+<body>
+<% include header.ejs %>
+<div class="nav">
+    <ul class="nav_list clearF">
+        <li><a  class="nav_list_a" href="/">首页</a></li>
+        <li><a  class="nav_list_a on" href="/article/list-1.html">文章</a></li>
+        <li class=" hasList">
+            <a  class="nav_list_a" href="#">笔记</a>
+            <ul class="dropDown">
+                <li><a href="">css+div</a></li>
+                <li><a href="">Javascript</a></li>
+                <li><a href="">css3+H5</a></li>
+            </ul>
+        </li>
+        <li><a  class="nav_list_a" href="#">案例</a></li>
+        <li><a  class="nav_list_a" href="#">联系</a></li>
+    </ul>
+</div>
+<div class="articleCheck">
+    <div class="AC_left">
+        <div class="wrapCon">
+            <% for(var i in data){ %>
+            <p class="AC_title"><%= data[i].title %></p>
+            <p class="info">
+                <span>发布时间：<%= data[i].time %></span>
+                <span>author: <span class="name"><%= data[i].author %></span></span>
+            </p>
+            <div class="AC_con">
+                <%= data[i].content %>
+            </div>
+            <em class="comment">评论</em>
+            <% } %>
+        </div>
+        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+        <div class="comment_area">
+            <form action="/article/articleCheck/<%= data[0].id %>.html" method="post">
+                <textarea name="cont" cols="30" rows="10"></textarea>
+                <input type="submit" value="评论" class="submit">
+            </form>
+        </div>
+        <% if(comment.length != 0){ %>
+            <% for(var i in data){ %>
+                <% for(var i in comment){ %>
+                    <div class="comment_list">
+                        <p class="comments">评论</p>
+                        <div class="comment_con">
+                            <ul class="clearF">
+                                <li class="profitPhoto"><img src="/images/comment/user.jpg" alt=""></li>
+                                <li>
+                                    <div>
+                                        <p class="user">inigo</p>
+                                        <p class="cont"><%= comment[i].content %></p>
+                                        <p class="time"><%= comment[i].ctime %></p>
+                                    </div>
+                            </ul>
+                        </div>
+                    </div>
+            <% } %>
+        <% } %> <% } %>
+    </div>
+    <div class="AC_right">
+        <div class="cateType">
+            <h4>栏目推荐</h4>
+            <ul>
+                <% for(var i in recData[0]){ %>
+                <li class="cate_list">
+                    <i class="icon"></i>
+                    <a href="/article/articleCheck/<%= recData[0][i].id %>.html"><%= recData[0][i].title %></a>
+                </li>
+                    <% } %>
+                <% for(var i in recData[1]){ %>
+                <li class="cate_list">
+                    <i class="icon"></i>
+                    <a href="/article/articleCheck/<%= recData[1][i].id %>.html"><%= recData[1][i].title %></a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    var bool = true;
+    $('em.comment').on('click',function(){
+        var $comment_area = $('.articleCheck .comment_area');
+        if(bool){
+            $comment_area.animate({
+                height:'100px',
+            })
+        }else{
+            $comment_area.animate({
+                height:'0px',
+             })
+        }
+        bool = !bool;
+    })
+</script>
+</body>
+</html>

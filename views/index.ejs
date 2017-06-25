@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome = 1">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+</head>
+<body>
+    <% include header.ejs %>
+    <div class="nav">
+        <ul class="nav_list clearF">
+            <li><a  class="nav_list_a on" href="/">首页</a></li>
+            <li><a  class="nav_list_a" href="/article/list-1.html">文章</a></li>
+            <li class=" hasList">
+                <a  class="nav_list_a" href="#">笔记</a>
+                <ul class="dropDown">
+                    <li><a href="">css+div</a></li>
+                    <li><a href="">Javascript</a></li>
+                    <li><a href="">css3+H5</a></li>
+                </ul>
+            </li>
+            <li><a  class="nav_list_a" href="#">案例</a></li>
+            <li><a  class="nav_list_a" href="#">about</a></li>
+        </ul>
+        <div class="mobile_nav_list">
+            <a href="javascript:;" class="nav_btn">
+                <span class="icon_bar"></span><span class="icon_bar"></span><span class="icon_bar"></span>
+            </a>
+            <ul>
+                <li><a  class="mobile_nav_list_a on" href="/">首页</a></li>
+                <li><a  class="mobile_nav_list_a" href="/article/list-1.html">文章</a></li>
+                <li><a class="mobile_nav_list_a" href="#">笔记</a></li>
+                <li><a  class="mobile_nav_list_a" href="#">案例</a></li>
+                <li><a  class="mobile_nav_list_a" href="#">about</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="bg">
+        <div id="wrap" class="clearF">
+        <div class="left1">
+            <div class="banner">
+                <div class="pic">
+                    <ul>
+                        <li class="pic_list">
+                            <a href="/demo/picNav/index.html"><img src="/images/banner/picNav.png" alt="" width="100%" height="100%"></a>
+                            <p class="des">图片导航</p>
+                        </li>
+                        <li class="pic_list">
+                            <a href="/demo/meteor/index.html"><img src="/images/banner/liuxing.png" alt="" width="100%" height="100%"></a>
+                            <p class="des">利用canvas和原生js画流星</p>
+                        </li>
+                        <li class="pic_list">
+                            <a href="/demo/allScreenMove/index.html"><img src="/images/banner/allScreen.png" alt="" width="100%" height="100%"></a>
+                            <p class="des">简单的全屏滚动页面</p>
+                        </li>
+                        <li class="pic_list">
+                            <a href="/demo/planeWar/index.html"><img src="/images/banner/planeWar.png" alt="" width="100%" height="100%"></a>
+                            <p class="des">原生js写简单打飞机游戏</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab">
+                    <ul>
+                        <li class="active">1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="article">
+                <h3>文章推荐</h3>
+                <ol>
+                    <% for(var i in recData){ %>
+                    <li class="article_list clearF">
+                        <p class="title"><%= recData[i].title %></p>
+                        <div class="article_con clearF">
+                            <figure>
+                                <img src=<%= recData[i].image %> alt="">
+                            </figure>
+                            <div class="con_des">
+                                <div class="des">
+                                    <p><%= recData[i].content %></p>
+                                </div>
+                                <a href="/article/articleCheck/<%= recData[i].id %>.html" class="readAll">阅读全文 》 </a>
+                            </div>
+                        </div>
+                        <p class="article_about">
+                            <span><%= recData[i].time %></span>
+                            <span>发表于：<a href=""><%=  recData[i].tag %></a><a href="/article/articleCheck/<%=  recData[i].id %>.html">评论</a></span>
+                        </p>
+                    </li>
+                    <% } %>
+                </ol>
+                <a class="checkMore" href="/article/list-1.html" title="点击查看更多文章">查看更多</a>
+            </div>
+        </div>
+        <div class="right1">
+            <div class="cateType">
+                <div id="box">
+                    <div class="caltitle">
+                        <div class="left btn"> &lt; </div>
+                        <h2><span id='month'></span><span id='year'></span></h2>
+                        <div class="right btn"> &gt; </div>
+                    </div>
+                    <div class="date">
+                        <p>
+                            <span>日</span>
+                            <span>一</span>
+                            <span>二</span>
+                            <span>三</span>
+                            <span>四</span>
+                            <span>五</span>
+                            <span>六</span>
+                        </p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+                <h4>最新文章</h4>
+                <ul>
+                    <% for(var i in articledata){ %>
+                    <li class="cate_list">
+                        <i class="icon"></i>
+                        <a href="/article/articleCheck/<%= articledata[i].id %>.html"><%= articledata[i].title %></a>
+                        <% } %>
+                </ul>
+                <div class="bdsharebuttonbox">
+                    <a href="#" class="bds_more" data-cmd="more"></a>
+                    <a href="#" class="bds_qzone" data-cmd="qzone"></a>
+                    <a href="#" class="bds_tsina" data-cmd="tsina"></a>
+                    <a href="#" class="bds_tqq" data-cmd="tqq"></a>
+                    <a href="#" class="bds_renren" data-cmd="renren"></a>
+                    <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+                </div>
+                <div class="wechat">
+                    <p class="saoma">扫描二维码和我一起交流学习</p>
+                    <img  data-tag="sharePhoto" src="images/wechat.png" alt=""width="280">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"web前端--走在前端设计之路上的俊潼的个人博客","bdMini":"2","bdMiniList":false,"bdPic":"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3314140130,3135332043&fm=23&gp=0.jpg","bdStyle":"1","bdSize":"32"},"share":{},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+    <div class="demo">
+        <div class="demo_con">
+            <h2>my demo</h2>
+            <p class="des">这里是笔者个人在学习前端的过程中联系的一些案例</p>
+            <div class="case clearF">
+                <ul class="hover_pack">
+                    <li>
+                        <a href="" class="b_btn">css3实例</a>
+                    </li>
+                    <li>
+                        <a href="/demo/meteor/index.html" class="demoImg">
+                            <img src="../images/demo/liuxing.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    利用canvas和原生js画流星 <br>
+                                    <span class="demo_show_span">css3</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/demo/rotate/index.html" class="demoImg">
+                            <img src="../images/demo/transform.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    利用transform属性和jq的轮播图 <br>
+                                    <span class="demo_show_span">css3</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="hover_pack">
+                    <li>
+                        <a href="/demo/picNav/index.html" class="demoImg">
+                            <img src="../images/demo/picNav.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    国外图片导航墙 <br>
+                                    <span class="demo_show_span">Javascript</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/demo/allScreenMove/index.html" class="demoImg">
+                            <img src="../images/demo/allScreen.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    全屏滚动简单页面 <br>
+                                    <span class="demo_show_span">Javascript</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="b_btn">Javascript实例</a>
+                    </li>
+                </ul>
+                <ul class="hover_pack  mobile_hide">
+                    <li>
+                        <a href="" class="b_btn">Javascript实例</a>
+                    </li>
+                    <li>
+                        <a href="/demo/planeWar/index.html" class="demoImg">
+                            <img src="../images/demo/planeWar.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    原生js写简单打飞机游戏 <br>
+                                    <span class="demo_show_span">Javascript</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/demo/desdrag/index.html" class="demoImg">
+                            <img src="../images/demo/dragSort.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    桌面系统拖拽排序 <br>
+                                    <span class="demo_show_span">Javascript</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="hover_pack  mobile_hide">
+                    <li>
+                        <a href="/demo/mi/index.html" class="demoImg">
+                            <img src="../images/demo/mi.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    小米官网的仿写 <br>
+                                    <span class="demo_show_span">pc页面</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/demo/JD/index.html" class="demoImg">
+                            <img src="../images/demo/jd.png" width="100%" height="100%" alt="">
+                            <div class="demo_animate demo_animate1"></div>
+                            <div class="demo_animate demo_animate2"></div>
+                            <div class="demo_animate demo_animate3"></div>
+                            <div class="demo_animate demo_animate4"></div>
+                            <div class="demo_animate demo_animate5"></div>
+                            <div class="introduce">
+                                <p class="demo_show">
+                                    移动端页面的仿写 <br>
+                                    <span class="demo_show_span">H5</span>
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" class="b_btn">静态页面</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer_left">
+            <h2>Juntong Blog</h2>
+            <p class="say">漫漫人生路,为何找不到出路? <br>
+                趁现在,带着年轻的资本，勇敢去闯一闯,即使最后失败了，也别让以后的自己后悔
+            </p>
+            <div class="footer_right">
+                <p>Copyright © Juntong Blog All Rights Reserved. 湘ICP备17001973号</p>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        /* $('.submit').on('click',function(){
+            $.ajax({
+                url:'/reg',
+                type:'get',
+                data:{
+                    username:$('.name').val(),
+                    pwd:$('.pwd').val()
+                }
+            })
+        })
+       // alert($('a').length)
+        $('a').each(function(){
+            $(this).on('click',function(){
+                var ID = $(this).attr('data-id');
+               // alert(ID)
+                $(this).parent('p').remove();
+                $.ajax({
+                    url:'/reg1',
+                    type:'get',
+                    data:{
+                       id:ID
+                    }
+                })
+            })
+        }) ;*/
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/reset.css">
+</head>
+<body>
+<div id="login_bg"></div>
+<div id="login">
+    <div class="loginHead">
+        <h1>blog后台登陆</h1>
+        <p class="head">Login to your account</p>
+    </div>
+<form action="/reg" method="post">
+    <div class="user">
+        <input id="name" type="text" name="username"placeholder="用户">
+
+    </div>
+    <div class="pwd">
+    <input id="pwd" type="password" name="pwd" placeholder="密码">
+    </div>
+    <p class="rember">
+        <input type="checkbox" id="cookie"><label for="cookie">记住密码</label>
+    </p>
+    <p class="login"><input type="button" value="登录" class="submit"><input type="submit" value="注册"></p>
+
+</form>
+</div>
+<script src="/js/jquery.js"></script>
+<script>
+   if(getCookie('username')){
+        $('#name').val(getCookie('username'));
+        $('#pwd').val(getCookie('pwd'));
+       ('#cookie').checked=true;
+    };
+    $('.submit').on('click',function(){
+        if($('#name').val()&&$('#pwd').val()&&$('#cookie').is(':checked')){
+            if(!getCookie('username')){
+                setcookie('username',$('#name').val(),7);
+                setcookie('pwd',$('#pwd').val(),7)
+            }
+        }
+
+        $.ajax({
+            url:'/login',
+            type:'post',
+            dataType:'json',
+            data:{
+                'username':$('#name').val(),
+                'pwd':$('#pwd').val()
+            },
+           success:function(data){
+                if(data['bool']){
+                    $('.user').append(data['result']);
+                }else{
+                    window.location.href=`/`;
+                }
+            },
+            error:function(data){
+                alert(data.responseText)
+        }
+        });
+    });
+    function setcookie(key,value,timer){
+        var oDate = new Date();
+        oDate.setDate(oDate.getDate()+timer);
+        document.cookie = key+"="+value+';expires='+oDate.toGMTString();
+    }
+
+    function getCookie(key){
+        var arr1 = document.cookie.split('; ');
+        for (var i=0;i<arr1.length;i++ )
+        {
+            var arr2 = arr1[i].split('=');
+            if ( arr2[0] == key )
+            {
+                return decodeURI( arr2[1] );
+            }
+        }
+    };
+</script>
+
+
+</body>
+</html>

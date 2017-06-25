@@ -1,0 +1,29 @@
+<div class="top">
+    <ul style="float:right;position:absolute;right:29px;">
+        <% if(locals.login){ %>
+        <% if(locals.admin){ %>
+        <li>你好,管理员 : <%= locals.login %></li>
+        <li><a href="/admin">后台管理</a></li>
+        <% }else{ %>
+        <li>你好 : <%= locals.login %></li>
+        <% } %>
+        <li><a href="/logout">退出</a></li>
+        <% }else{ %>
+        <li><a href="login">登陆</a></li>
+        <li ><a href="/reg">注册</a></li>
+        <% } %>
+    </ul>
+</div>
+<div class="title">
+    <h1>
+        <span>f</span><span>r</span><span>e</span><span>e</span><span>b</span><span>l</span><span>o</span><span>g</span>
+    </h1>
+    <h3><span>赵</span><span>俊</span><span>潼</span><span>个</span><span>人</span><span>博</span><span>客</span></h3>
+    <div class="search">
+        <form action="/search" method="get" class="clearF">
+            <input type="submit" value="" class="searchButton">
+            <input type="text" name="keyWords" class="searchBox" placeholder="请输入关键字...">
+
+        </form>
+    </div>
+</div>

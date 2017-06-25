@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="text" class="user"><input type="button" class="join" value="进入聊天室">
+<input type="text" class="txt"><input type="button" class="submit"value="发送">
+<div id="chat"></div>
+<div class="username"></div>
+<div class="online"></div>
+<script src="js/socket.io.min.js"></script>
+<script>
+
+    let txt = document.querySelector('.txt'),
+        user = document.querySelector('.user'),
+        submit = document.querySelector('.submit'),
+        join = document.querySelector('.join'),
+        username = document.querySelector('.username'),
+        online = document.querySelector('.online'),
+        chat = document.querySelector('#chat');
+    let socket;
+    join.onclick = function(){
+          let username = user.value;
+          init(username);
+        user.value = '';
+    }
+
+    function init(name){
+         socket  = io.connect('/');
+        socket.emit('login',{username:name});
+        socket.on('login', data => {
+            username.innerHTML += `${data.username}加入了聊天室 <br>`;
+        });
+        socket.on('logout',data => {
+            document.body.innerHTML += `${data.logout}退出了聊天室`
+        });
+        socket.on('chat', (data) => {
+            chat.innerHTML += `${data.name} <br>`;
+        })
+    }
+
+
+
+    submit.onclick = function(){
+        let val = txt.value;
+        socket.emit('con',{name:val})
+
+    }
+
+</script>
+</body>
+</html>

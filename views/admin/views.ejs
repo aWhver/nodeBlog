@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+    <% for(var i in dirdata){ %>
+        <% if( dirdata[i].includes('.') ){ %>
+            <p data-dirtype="1" onclick="next(this)"> <%=   dirdata[i]  %></p>
+        <% }else{ %>
+             <p data-dirtype="2" onclick="next(this)"> <%=   dirdata[i]  %></p>
+        <% } %>
+
+    <% } %>
+    <script>
+        let dirname;
+        function next(_this){
+                dirtype = _this.getAttribute('data-dirtype');
+            if(_this.getAttribute('data-dirname') === null){
+                dirname = _this.innerText;
+            }else{
+                dirname = `${_this.getAttribute('data-dirname')}/${_this.innerText}`;
+            }
+            $.ajax({
+                url:'/admin/views',
+                type:'post',
+                dataType:'json',
+                data:{
+                    dirtype: dirtype,
+                    dirname:dirname
+                },
+                success(data){
+                    if(`${data.bool}` ==='1')
+                    {
+                        document.body.innerHTML = `<input type="button" onclick=back(dirname) value="返回">
+                    <textarea name="cont" id="" cols="30" rows="10">
+                        ${data.data}
+                    </textarea>
+                    <input onclick = 'modify()' type="button" value="修改">
+                `
+                    }
+                   if(`${data.bool}`==='2'){
+                       document.body.innerHTML = '';
+                        for(var i=0;i<data.dirData.length;i++){
+                            if(data.dirData[i].includes('.')){
+                                document.body.innerHTML +=   `<p data-dirname='${dirname}' data-dirtype="1" onclick="next(this)">${data.dirData[i]}</p>`
+                            }else{
+                                document.body.innerHTML +=   `<p data-dirname='${dirname}' data-dirtype="2" onclick="next(this)">${data.dirData[i]}</p>`
+                            }
+
+                        }
+                    }
+                },
+                error(){
+                    alert('error')
+                }
+            })
+        }
+        function back(dirname){
+            dirname = dirname.match(/admin/)[0];
+            $.ajax({
+                url:'/admin/views',
+                type:'post',
+                dataType:'json',
+                data:{
+                    dirtype:2,
+                    dirname:dirname
+                },
+                success(data){
+                    document.body.innerHTML = '';
+                    for(var i in data.dirData){
+                        if(data.dirData[i].includes('.')){
+                            document.body.innerHTML += `<p data-dirname='${data.dirname}' data-dirtype="1" onclick="next(this)"> ${data.dirData[i]} </p>`
+                        }else{
+                            document.body.innerHTML += `<p data-dirname='${data.dirname}' data-dirtype="2" onclick="next(this)"> ${data.dirData[i]} </p>`
+                        }
+                    }
+                },
+                error(){}
+            })
+        }
+        function modify(){
+            $.ajax({
+                url:'/admin/views',
+                type:'post',
+                data:{
+                    val:$('textarea').val(),
+                    dirtype:3,
+                    dirname:dirname
+                },
+                success(data){
+                    alert(data.result)
+                },
+                error(){}
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/js/jquery.js"></script>
+</head>
+<body>
+    <% for(var i in data){ %>
+         id：<span class="id"> <%= data[i].id %></span>
+        用户：<%= data[i].username %>
+        <input type="text" name="user" class="user">
+        admin：<%= data[i].admin %>
+        <input type="text" name="admin" class="admin">
+    <input type="button" value="提交" class="submit">
+    <% } %>
+    <script>
+        $('.submit').on('click',function(){
+            $.ajax({
+                url:'/admin/user/update',
+                type:'post',
+                dataType:'json',
+                data:{
+                    id:$('.id').text(),
+                    user:$('.user').val() || "<%= data[0]['username'] %>",
+                    admin:$('.admin').val() || '<%= data[0].admin %>'
+                },
+                success(){
+                    alert('修改成功')
+                },
+                error(){
+                    alert('操作失败')
+                }
+            })
+        })
+    </script>
+</body>
+</html>

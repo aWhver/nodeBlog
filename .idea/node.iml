@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../Vue2.0LOL-master" />
+    <content url="file://$MODULE_DIR$/../inigoblog" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+    </content>
+    <content url="file://$MODULE_DIR$/../vue" />
+    <content url="file://$MODULE_DIR$/../vue-elm" />
+    <content url="file://$MODULE_DIR$/../vue2-elm-master" />
+    <content url="file://$MODULE_DIR$/../vue2.0" />
+    <content url="file://$MODULE_DIR$/../vue2.0-demo/vue2.0lol" />
+    <content url="file://$MODULE_DIR$/../vue2.0-demo/vue2.0lol1" />
+    <content url="file://D:/wamp/www/blog" />
+    <content url="file://F:/无虑nodejs/node/node-05/module/node05" />
+    <content url="file://F:/无虑nodejs/node/node-05/node05" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

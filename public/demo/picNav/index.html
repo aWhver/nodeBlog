@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+	 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+  <title>图片导航</title>
+  <style type="text/css">
+	*{margin:0;padding:0;}
+	body{background:#191919;}
+	#ImgNav{width:1000px;height:500px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+	#background{width:100%;height:100%;position:absolute;left:0;top:0;z-index:9;background:url('image/bg.png')no-repeat center;}
+	#ImgNav .imgShow{width:100%;height:100%;position:absolute;overflow:hidden;}
+	#ImgNav .imgShow .imgBox{position:absolute;left:0;top:0;}
+	#ImgNav .imgShow .imgList{width:1000px;height:400px;position:absolute;top:0;}
+	#ImgNav .imgShow .imgList li{width:100%;height:100%;list-style:none;position:absolute;left:0;}
+	#ImgNav .imgShow .imgList a{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;width:600px;height:400px;text-decoration:none;}
+	#ImgNav .tab{position:absolute;bottom:25px;left:50%;}
+	#ImgNav .tab span.active{background:#fff;}
+	#ImgNav .tab span{width:10px;height:10px;background:#333;z-index:10;cursor:pointer;}
+	a{
+		position: fixed;
+		padding: 4px 6px;
+		margin: 0 5px;
+		font-size: 14px;
+		font-weight: bold;
+		color: #fff;
+		background: rgba(0,0,0,.5);
+		border: 1px solid #fff;
+		border-radius: 5px;
+		cursor: pointer;
+		bottom: 25px;
+		left: 25px;
+	}
+  </style>
+ </head>
+ <body>
+ <a href="/">back</a>
+	<div id="ImgNav">
+		<div id="background"></div>
+		<div class="imgShow">
+			<div class="imgBox">
+				<div class="imgList">
+					<ul>
+						<li><a href=""><img src="image/1.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/2.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/3.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/4.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/5.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/6.jpg" alt="" width="600" height="400" /></a></li>
+					</ul>
+				</div>
+				<div class="imgList">
+					<ul>
+					<li><a href=""><img src="image/7.jpg" alt="" width="600" height="400" /></a></li>
+					<li><a href=""><img src="image/8.jpg" alt="" width="600" height="400" /></a></li>
+					<li><a href=""><img src="image/9.jpg" alt="" width="600" height="400" /></a></li>
+					</ul>
+				</div>
+				<div class="imgList">
+					<ul>
+					<li><a href=""><img src="image/10.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/11.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/12.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/13.jpg" alt="" width="600" height="400" /></a></li>
+						<li><a href=""><img src="image/16.jpg" alt="" width="600" height="400" /></a></li>
+					</ul>
+				</div>
+				<div class="imgList">
+					<ul>
+					<li><a href=""><img src="image/14.jpg" alt="" width="600" height="400" /></a></li>
+					<li><a href=""><img src="image/15.jpg" alt="" width="600" height="400" /></a></li>
+					<li><a href=""><img src="image/17.jpg" alt="" width="600" height="400" /></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function(){
+			var $nav = $('#ImgNav');
+			var $imgList = $('#ImgNav .imgShow .imgList');
+			var $imgBox = $('.imgBox');
+			var leftList = 620;
+			var topLi = 420;
+			var topSpan = 15,leftTab = 15;
+
+			init();
+			var $Span = $('#ImgNav .tab span');
+			$Span.click(function(){
+				$(this).addClass('active').siblings().removeClass('active').parent().siblings().find('span').removeClass('active');
+				var rows = $(this).parent().attr('class').split('tab')[1];
+				var cols = $(this).attr('num');
+				click(-rows,-cols);
+			});
+			//键盘时间
+			var nowTime = 0; 
+			$(document).keyup(function(e){
+				if ( new Date() - nowTime > 500 )
+				{
+					nowTime = new Date();
+					var nowLeft = $imgBox.position().left;
+					var nowTop = $imgBox.position().top;
+					var nowRows = Math.ceil(Math.abs(nowLeft)/leftList);//获取当前行
+					var nowcols = Math.ceil(Math.abs(nowTop)/topLi);//获取当前列
+					var length = $imgList.length;
+					var length1;
+					$nav.find('.tab div').each(function(i){
+						$(this).find('span').each(function(j){
+							if ( this.className == 'active' )
+							{
+								length1 = $(this).parent().find('span').length;
+							}
+						})
+					})
+					switch (e.keyCode)
+					{
+						case 37:
+							nowRows -= 1;
+							if ( nowRows<0 )nowRows=0;
+							click(-nowRows,0);
+							classC(nowRows,0);
+							break;
+						case 38:
+							nowcols -= 1;
+							if ( nowcols<0 )nowcols=0;
+							click(-nowRows,-nowcols);
+							classC(nowRows,nowcols);
+							break;
+						case 39:
+							nowRows += 1;
+							if ( nowRows>length-1 )nowRows=length-1;
+							click(-nowRows,0);
+							classC(nowRows,0);
+							break;
+						case 40:
+							nowcols += 1;
+							if ( nowcols>length1-1 )nowcols=length1-1;
+							click(-nowRows,-nowcols);
+							classC(nowRows,nowcols);
+							break;
+						default:
+							return;
+					}
+				}
+			});
+			//初始化布局
+			function init(){
+				var index;
+				var $tab = $('<div class="tab"></div>');
+				$nav.append($tab);
+				$imgList.each(function(i){
+						var $div = $('<div></div>');
+						index = $(this).index();
+						$(this).css('left',index*leftList+'px');
+						$(this).find('li').each(function(j){
+						$(this).css('top',j*topLi+'px');
+					});
+						$div.addClass('tab'+index);
+						$tab.append($div);
+				});
+				//按钮布局
+				$tab.find('div').each(function(i){
+					$(this).css({
+						position:'absolute',
+						'left':i*leftTab+'px'
+					});
+					$imgList.eq(i).find('li').each(function(j){
+						var $span = $('<span></span>');
+						$span.attr('num',j).css({
+							position:'absolute',
+							'top':topSpan*j+'px',
+							});
+						$span.appendTo($tab.find('.tab'+i));
+					});
+				});
+				$tab.find('span').eq(0).addClass('active');
+			};
+			//位移
+			function click(rows,cols){
+				$imgBox.stop().animate({
+					left:leftList*rows+'px',
+					top:topLi*cols+'px'
+				},500);
+			};
+			//class变
+			function classC(i,j){$nav.find('.tab div').eq(i).find('span').eq(j).addClass('active').siblings().removeClass('active').parent().siblings().find('span').removeClass('active');}
+		})();
+	</script>
+ </body>
+</html>

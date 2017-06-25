@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+<div class="row" id="leftControl">
+    <div class="col-md-2 col-xs-2">
+        <ul class="nav nav-stacked">
+            <li><a class="leftControl" href="">用户管理</a></li>
+        </ul>
+    </div>
+    <div class="col-md-10 col-xs-10">
+        <div class="userControl">
+            <form action="user" method="post">
+               <table class="table table-bordered">
+                   <thead>
+                        <tr>
+                            <th>是否勾选</th>
+                            <th>用户</th>
+                            <th>admin</th>
+                            <th>修改</th>
+                        </tr>
+                   </thead>
+                   <tbody>
+                        <% for(var i in data){ %>
+                        <tr>
+                            <td><input type="checkbox" value="<%= data[i].id %>" name="id"></td>
+                            <td><%= data[i].username %></td>
+                            <td><%= data[i].admin %></td>
+                            <td><a href="/admin/user/update?id=<%= data[i].id %>">修改</a></td>
+                        </tr>
+                        <% } %>
+                   </tbody>
+               </table>
+                <input type="submit" value="删除">
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

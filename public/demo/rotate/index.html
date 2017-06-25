@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>旋转翻页</title>
+	 <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+  <style type="text/css">
+	*{margin:0;padding:0;}
+	body{background:url(img/bg.jpg);height:100%;}
+	#wrap{
+		width:570px;
+		height:420px;
+		padding:50px 70px;
+		margin:20px auto;
+		box-shadow:0 0 3px #000;
+		position:relative;
+	}
+	#wrap .pic{
+		width:570px;
+		height:420px;
+		perspective:800px;
+	}
+	#wrap .pic ul{
+		width:570px;
+		height:420px;
+		position:absolute;
+		transform-style:preserve-3d;
+		z-index:-9;
+	}
+	#wrap .pic ul.now{z-index:10;}
+	#wrap .pic ul.next{z-index:8;}
+	#wrap .pic ul li{
+		list-style:none;
+		position:absolute;
+		transform:translate(0px, 0px)rotatex(0deg);
+		opacity:1;
+		
+		border:1px solid transparent;
+		background-origin:border-box;
+	}
+	#wrap .pic ul li.on{
+		transform:translate(-50px, -50px)rotatex(720deg);
+		opacity:0;
+		border:1px solid #000;
+	}
+	#wrap .pic ul li.transition{transition:transform 2s,opacity 2s;}
+	#wrap .pic ul li.last{
+		transform:translate(0px, 0px)rotatex(0deg);
+		opacity:1;
+		border:1px solid transparent;
+	}
+	#wrap .btn div{
+		width:40px;
+		height:70px;
+		background-image:url(img/btn.png);
+		position:absolute;
+		top:50%;
+		margin-top:-35px;
+		cursor:pointer;
+	}
+	#wrap .btn div#left{left:5px}
+	#wrap .btn div#right{right:5px;background-position:-42px 0;}
+	#wrap .pic .ul1 li{
+		background-image:url(img/1.jpg);
+	}
+	#wrap .pic .ul2 li{
+		background-image:url(img/2.jpg);
+	}
+	#wrap .pic .ul3 li{
+		background-image:url(img/3.jpg);
+	}
+	#wrap .pic .ul4 li{
+		background-image:url(img/4.jpg);
+	}
+	#wrap .pic .ul5 li{
+		background-image:url(img/5.jpg);
+	}
+	  a{
+		  position: fixed;
+		  padding: 4px 6px;
+		  margin: 0 5px;
+		  font-size: 14px;
+		  font-weight: bold;
+		  color: #fff;
+		  background: rgba(0,0,0,.5);
+		  border: 1px solid #fff;
+		  border-radius: 5px;
+		  cursor: pointer;
+		  bottom: 25px;
+		  left: 25px;
+	  }
+  </style>
+ </head>
+ <body>
+	<div id="wrap">
+		<div class="pic">
+			<ul class="ul5" ></ul>
+			<ul class="ul1 next" ></ul>
+			<ul class="ul2" ></ul>
+			<ul class="ul3" ></ul>
+			<ul class="ul4" ></ul>
+			<ul class="ul5" ></ul>
+			<ul class="ul1" ></ul>
+		</div>
+		<div class="btn">
+			<div id="left"></div>
+			<div id="right"></div>
+		</div>
+	</div>
+	<a href="/">back</a>
+	<script type="text/javascript">
+		$(function(){
+			fn(10,10);
+			function fn(numX,numY){
+				var $ul = $('.pic ul');
+				var $btn = $('.btn div');
+				var ulIndex = 1;
+				var ulW = $ul.width(),
+					ulH = $ul.height();
+				var liW = ulW/numX,
+					liH = ulH/numY;
+				var $li;
+				var onOff = true;
+				$ul.each(function(){
+					var s = "";
+					for (var i=0;i<numX*numY ;i++ )
+					{
+						s += '<li></li>';
+					};
+					$(this).append(s);
+				});
+				$li = $('.pic ul li');
+				$li.each(function(i){
+					i %= (numX * numY);
+					var iX = i%numX,
+						iY = parseInt(i/numX);
+					this.x= iX;
+					this.y= iY;
+					$(this).css({
+						width: liW + 'px',
+						height: liH + 'px',
+						backgroundPosition: (-liW*iX) + 'px ' + (-liH*iY) + 'px',
+						left: liW*iX + 'px ',
+						top: liH*iY + 'px'
+					});
+				});
+				$btn.click(function(){
+					if ( onOff )
+					{
+						onOff=!onOff;
+						var index = $(this).index();
+						var $ulli;
+						
+						if ( index )
+						{
+							//层级的提升
+							var nextIndex = ulIndex+1;
+							$ul.eq(nextIndex).addClass('next').siblings().removeClass('next');
+							$ul.eq(ulIndex).addClass('now').siblings().removeClass('now');
+							
+							var sum = numX+numY-2;
+							
+							$ulli = $ul.eq(ulIndex).find('li');
+							ulIndex++;
+							console.log(ulIndex);
+							var timer = setInterval(function(){
+								$ulli.each(function(){
+									if ( this.x+this.y == sum )
+									{
+										$(this).removeClass('last transition').addClass('on transition');
+									};
+								});
+								sum--;
+								if ( sum <0 )
+								{
+									clearInterval(timer);
+									setTimeout(function(){
+										onOff=!onOff;
+										if ( ulIndex == $ul.length-1 )
+										{
+											$li.removeClass('on last transition');
+											$ul.removeClass('next now');
+											$ul.eq(1).addClass('next');
+											ulIndex=1;
+										};
+									},1000);
+								};
+							},50);
+						}
+						else
+						{
+							var lastIndex = ulIndex-1;
+							$ul.eq(lastIndex).addClass('now').siblings().removeClass('now');
+							$ul.eq(ulIndex).addClass('next').siblings().removeClass('next');
+							var sum = 0;
+							ulIndex--;
+							$ulli = $ul.eq(ulIndex).find('li');
+							$ulli.removeClass('transition').addClass('on');
+							var timer = setInterval(function(){
+								$ulli.each(function(){
+									if ( this.x+this.y == sum )
+									{
+										$(this).addClass('last transition');
+									};
+								});
+								sum++;
+								if ( sum > numX+numY-2 )
+								{
+									clearInterval(timer);
+									setTimeout(function(){
+										onOff=!onOff;
+										if ( ulIndex == 0 )
+										{
+											$li.removeClass('on last');
+											$ul.removeClass('next now');
+											$ul.eq($ul.length-2).addClass('next');
+											ulIndex=$ul.length-2;
+										};
+									},1000);
+								};
+							},50);	
+						};
+					};
+				});
+			};
+		});
+	</script>
+ </body>
+</html>
